@@ -19,22 +19,21 @@ export class TwilioService {
   msgSubject = new BehaviorSubject("");
   roomObj: any;
   responsText: string;
-  
 
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
   api: string = 'https://prena-ogia.azurewebsites.net/mobile/v1/patient/pregnancy/b71dad53-a8b6-4ec9-9450-fa1d6dd60227/caredetail/careplan/appointment/d2256f3d-12c3-493b-821e-0093feb0adf7/access';
- // api: string = 'https://my-json-server.typicode.com/JSGund/XHR-Fetch-Request-JavaScript/posts';
-    getAll(): Observable<any> 
-    {    
-      let headers = new HttpHeaders();
-      headers = headers.set('Access-Control-Allow-Origin', '*')
-      headers = headers.set('Content-Type', 'application/json');
-      headers = headers.set('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJodGVycnlAZ21haWwuY29tIiwiaWF0IjoxNjMyMTE0MzM5LCJleHAiOjE2MzIxNTAzMzl9.S5tysUDMzmxlwByaAvf_2klShkeUUnMVwLyFBCheJqXDYJl5R7qfibbhtXe3eNOZQQXrkHq089PLLHhBgWr87g');
-           
-   // return this.http.get(this.api);  
-    return this.http.get(this.api, { headers: headers ,responseType: 'text'});
+  // api: string = 'https://my-json-server.typicode.com/JSGund/XHR-Fetch-Request-JavaScript/posts';
+  getAll(): Observable<any> {
+    let headers = new HttpHeaders();
+    headers = headers.set('Access-Control-Allow-Origin', '*')
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJodGVycnlAZ21haWwuY29tIiwiaWF0IjoxNjMyMTE0MzM5LCJleHAiOjE2MzIxNTAzMzl9.S5tysUDMzmxlwByaAvf_2klShkeUUnMVwLyFBCheJqXDYJl5R7qfibbhtXe3eNOZQQXrkHq089PLLHhBgWr87g');
+
+    // return this.http.get(this.api);  
+    return this.http.get(this.api, { headers: headers, responseType: 'text' });
   }
-  
+
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
@@ -47,76 +46,84 @@ export class TwilioService {
   };
 
   getToken(username): Observable<any> {
-    
+
     return this.http.post('url', { uid: username });
   }
 
-  connectToRoom(accessToken: string, options): void 
-  {
-    console.log("this.connectToRoom--- "+accessToken);
-    console.log("this.options--- "+JSON.stringify(options));
-    console.log("name--- "+options.name);
+  connectToRoom(accessToken: string, options): void {
+    console.log("this.connectToRoom--- " + accessToken);
+    console.log("this.options--- " + JSON.stringify(options));
+    console.log("name--- " + options.name);
     //console.log("this.roomObj--- "+this.roomObj);
 
-    
+
     this.startLocalVideo();
     this.previewing = true;
-    
 
-    connect(accessToken, options).then(room => {
-      //this.roomObj = room;
-      this.roomObj = options.name;
-      console.log("this.roomObj--- "+this.roomObj);
-      if (!this.previewing && options['video']) {
-        this.startLocalVideo();
-        this.previewing = true;
-      }
+    accessToken = accessToken || "eyJjdHkiOiJ0d2lsaW8tZnBhO3Y9MSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0."
+      + "eyJpc3MiOiJTSzFlZTUxOTIwMzdmYjg2ZWY2ODQ3YzFkYjQzYzM2NWVkIiwiZXhwIjoxNjMyMjY2Nz"
+      + "QyLCJncmFudHMiOnsiaWRlbnRpdHkiOiJUZXN0VXNlcjEiLCJ2aWRlbyI6eyJyb29tIjoiZDIyNTZmM"
+      + "2QtMTJjMy00OTNiLTgyMWUtMDA5M2ZlYjBhZGY3In19LCJqdGkiOiJTSzFlZTUxOTIwMzdmYjg2ZWY2OD"
+      + "Q3YzFkYjQzYzM2NWVkLTE2MzIyNTIyODgiLCJzdWIiOiJBQzI3ZjM0MmFjMmU4YTFjYjQxMDgyMzI4NTV"
+      + "hZWI0MWU4In0.2ZrFXsdasK-AwwVGuZiUDGbYeqZIuP1Y5aajP4Ol4hE";
 
-      room.participants.forEach(participant => {
-        this.msgSubject.next("Already in Room: '" + participant.identity + "'");
-         console.log("Already in Room: '" + participant.identity + "'");
-         this.attachParticipantTracks(participant);
-      });
+    connect(accessToken, options)
+      .then(room => {
+        //this.roomObj = room;
+        this.roomObj = options.name;
+        console.log("this.roomObj--- " + this.roomObj);
+        if (!this.previewing && options['video']) {
+          this.startLocalVideo();
+          this.previewing = true;
+        }
 
-      room.on('participantDisconnected', (participant) => {
-        this.msgSubject.next("Participant '" + participant.identity + "' left the room");
-         console.log("Participant '" + participant.identity + "' left the room");
-
-        this.detachParticipantTracks(participant);
-      });
-
-      room.on('participantConnected',  (participant) => {
-        participant.tracks.forEach(track => {
-          this.remoteVideo.nativeElement.appendChild(track.attach());
+        room.participants.forEach(participant => {
+          this.msgSubject.next("Already in Room: '" + participant.identity + "'");
+          console.log("Already in Room: '" + participant.identity + "'");
+          this.attachParticipantTracks(participant);
         });
 
-        // participant.on('trackAdded', track => {
-        //   console.log('track added')
-        //   this.remoteVideo.nativeElement.appendChild(track.attach());
-        //   // document.getElementById('remote-media-div').appendChild(track.attach());
-        // });
-      });
+        room.on('participantDisconnected', (participant) => {
+          this.msgSubject.next("Participant '" + participant.identity + "' left the room");
+          console.log("Participant '" + participant.identity + "' left the room");
 
-      // When a Participant adds a Track, attach it to the DOM.
-      room.on('trackAdded', (track, participant) => {
-        console.log(participant.identity + " added track: " + track.kind);
-        this.attachTracks([track]);
-      });
-
-      // When a Participant removes a Track, detach it from the DOM.
-      room.on('trackRemoved', (track, participant) => {
-        console.log(participant.identity + " removed track: " + track.kind);
-        this.detachTracks([track]);
-      });
-
-      room.once('disconnected',  room => {
-        this.msgSubject.next('You left the Room:' + room.name);
-        room.localParticipant.tracks.forEach(track => {
-          var attachedElements = track.detach();
-          attachedElements.forEach(element => element.remove());
+          this.detachParticipantTracks(participant);
         });
+
+        room.on('participantConnected', (participant) => {
+          participant.tracks.forEach(track => {
+            this.remoteVideo.nativeElement.appendChild(track.attach());
+          });
+
+          // participant.on('trackAdded', track => {
+          //   console.log('track added')
+          //   this.remoteVideo.nativeElement.appendChild(track.attach());
+          //   // document.getElementById('remote-media-div').appendChild(track.attach());
+          // });
+        });
+
+        // When a Participant adds a Track, attach it to the DOM.
+        room.on('trackAdded', (track, participant) => {
+          console.log(participant.identity + " added track: " + track.kind);
+          this.attachTracks([track]);
+        });
+
+        // When a Participant removes a Track, detach it from the DOM.
+        room.on('trackRemoved', (track, participant) => {
+          console.log(participant.identity + " removed track: " + track.kind);
+          this.detachTracks([track]);
+        });
+
+        room.once('disconnected', room => {
+          this.msgSubject.next('You left the Room:' + room.name);
+          room.localParticipant.tracks.forEach(track => {
+            var attachedElements = track.detach();
+            attachedElements.forEach(element => element.remove());
+          });
+        });
+      }).catch((_err) => {
+        console.log("_err", _err);
       });
-    });
   }
 
   attachParticipantTracks(participant): void {

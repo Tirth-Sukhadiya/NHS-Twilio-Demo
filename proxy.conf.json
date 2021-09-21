@@ -1,0 +1,8 @@
+{
+    "/api": {
+      "target": "https://prena-ogia.azurewebsites.net/mobile/v1/patient/pregnancy/b71dad53-a8b6-4ec9-9450-fa1d6dd60227/caredetail/careplan/appointment/d2256f3d-12c3-493b-821e-0093feb0adf7/access",
+      "secure": false
+    }
+  }
+
+  

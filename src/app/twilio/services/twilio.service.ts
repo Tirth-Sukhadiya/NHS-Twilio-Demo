@@ -30,7 +30,7 @@ export class TwilioService {
     headers = headers.set('Content-Type', 'application/json');
     headers = headers.set('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJodGVycnlAZ21haWwuY29tIiwiaWF0IjoxNjMyMTE0MzM5LCJleHAiOjE2MzIxNTAzMzl9.S5tysUDMzmxlwByaAvf_2klShkeUUnMVwLyFBCheJqXDYJl5R7qfibbhtXe3eNOZQQXrkHq089PLLHhBgWr87g');
 
-    // return this.http.get(this.api);  
+    // return this.http.get(this.api);
     return this.http.get(this.api, { headers: headers, responseType: 'text' });
   }
 
@@ -57,20 +57,15 @@ export class TwilioService {
     //console.log("this.roomObj--- "+this.roomObj);
 
 
-    this.startLocalVideo();
-    this.previewing = true;
+    // this.startLocalVideo();
+    // this.previewing = true;
 
-    accessToken = accessToken || "eyJjdHkiOiJ0d2lsaW8tZnBhO3Y9MSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0."
-      + "eyJpc3MiOiJTSzFlZTUxOTIwMzdmYjg2ZWY2ODQ3YzFkYjQzYzM2NWVkIiwiZXhwIjoxNjMyMjY2Nz"
-      + "QyLCJncmFudHMiOnsiaWRlbnRpdHkiOiJUZXN0VXNlcjEiLCJ2aWRlbyI6eyJyb29tIjoiZDIyNTZmM"
-      + "2QtMTJjMy00OTNiLTgyMWUtMDA5M2ZlYjBhZGY3In19LCJqdGkiOiJTSzFlZTUxOTIwMzdmYjg2ZWY2OD"
-      + "Q3YzFkYjQzYzM2NWVkLTE2MzIyNTIyODgiLCJzdWIiOiJBQzI3ZjM0MmFjMmU4YTFjYjQxMDgyMzI4NTV"
-      + "hZWI0MWU4In0.2ZrFXsdasK-AwwVGuZiUDGbYeqZIuP1Y5aajP4Ol4hE";
+    accessToken = accessToken || "eyJjdHkiOiJ0d2lsaW8tZnBhO3Y9MSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.eyJpc3MiOiJTSzFlZTUxOTIwMzdmYjg2ZWY2ODQ3YzFkYjQzYzM2NWVkIiwiZXhwIjoxNjMyMzk2OTI2LCJncmFudHMiOnsiaWRlbnRpdHkiOiJUZXN0VXNlcjEiLCJ2aWRlbyI6eyJyb29tIjoiZDIyNTZmM2QtMTJjMy00OTNiLTgyMWUtMDA5M2ZlYjBhZGY3In19LCJqdGkiOiJTSzFlZTUxOTIwMzdmYjg2ZWY2ODQ3YzFkYjQzYzM2NWVkLTE2MzIzODI0NjQiLCJzdWIiOiJBQzI3ZjM0MmFjMmU4YTFjYjQxMDgyMzI4NTVhZWI0MWU4In0.zX2uskG8wmMlDb2PQ_f1bMjhMyzImsJ24Oian-nxKDo";
 
     connect(accessToken, options)
       .then(room => {
-        //this.roomObj = room;
-        this.roomObj = options.name;
+        this.roomObj = room;
+        // this.roomObj = options.name;
         console.log("this.roomObj--- " + this.roomObj);
         if (!this.previewing && options['video']) {
           this.startLocalVideo();
